@@ -2555,12 +2555,16 @@ body {
     outline: none;
     border: 2px solid black;
     padding: 7px;
-    width: 250px !important;
+    width: 180px;
     font-size: 17px;
     transition: all .6s;
     font-weight: 600;
     border-radius: 3px;
     transform: translateX(-1rem);
+  }
+
+  .wear__buttons {
+    transform: translateX(-1.7rem) !important;
   }
 
   .s__text {
@@ -2600,12 +2604,16 @@ body {
     outline: none;
     border: 2px solid black;
     padding: 7px;
-    width: 230px !important;
+    width: 180px;
     font-size: 17px;
     transition: all .6s;
     font-weight: 600;
     border-radius: 3px;
-    transform: translateX(-1.5rem);
+    transform: translateX(-2.3rem);
+  }
+
+  .wear__buttons {
+    transform: translateX(-3rem) !important;
   }
 
   .s__text {
@@ -2657,8 +2665,8 @@ body {
   cursor: pointer;
   outline: none;
   border: 2px solid black;
-  padding: 7px;
-  width: 290px;
+  padding: 8px;
+  width: 180px;
   font-size: 17px;
   transition: all .6s;
   font-weight: 600;
@@ -2826,4 +2834,25 @@ body {
 .product__heads {
   text-align: center;
 }
+}
+
+
+.checkout__btns {
+  padding: 8px 50px;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: white;
+  color: #000;
+  text-align: center;
+  transition: all .4s;
+  border: 2px solid black;
+  text-decoration: none;
+}
+
+.checkout__btns:hover {
+  background-color: #000;
+  color: #fff;
 }

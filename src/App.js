@@ -14,6 +14,7 @@ import Mandetail from './components/mandetail';
 import Navbarx from './components/navbar';
 import InputControl from './components/InputControl';
 import Footer from './components/footer';
+import CheckoutPage from './components/checkout';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Route path='/mens' element={<Mens />}/>
       <Route path='/women' element={<Women />}/>
       <Route path='/signup' element={<Signup />}/>
+      <Route path='/checkout' element={<CheckoutPage />}/>
       <Route path='/login' element={<Login />}/>
       <Route path='/profile' element={<Profile />}/>
       <Route path='/mensdetails/:id' element={<Mensdetails />}/>

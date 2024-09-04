@@ -1,22 +1,75 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import '../App.css';
-import { Link, useNavigate } from 'react-router-dom';
-import fbicon from './images/facebookicon.svg';
-import googleicon from './images/googleicon.svg';
-import { signInWithPopup } from 'firebase/auth';
-import {auth, providers} from './firebase'
-import logo from './images/logo1.avif'
 
 
-function Cart() {
+const CheckoutPage = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        address: '',
+        city: '',
+        state: '',
+        zip: '',
+        email: '',
+        phone: '',
+      });
+      const [isPopupVisible, setPopupVisible] = useState(false);
+    
+      const handleChange = (e) => {
+        setFormData({
+          ...formData,
+          [e.target.name]: e.target.value,
+        });
+      };
+    
+      const isFormComplete = Object.values(formData).every((value) => value.trim() !== '');
+    
+      const handleOrder = () => {
+        if (isFormComplete) {
+          setPopupVisible(true);
+          navigate('/checkout');
+          localStorage.clear();
+          localStorage.removeItem('cart');
+          // Reset the form data
+          setFormData({
+            name: '',
+            address: '',
+            city: '',
+            state: '',
+            zip: '',
+            email: '',
+            phone: '',
+          });
+        }
+      };
+    
+      const closePopup = () => {
+        setPopupVisible(false);
+      };
 
-
-  const navigate = useNavigate();
+  const [totals, setTotal] = useState(0)
 
   const carts = JSON.parse(localStorage.getItem('cart')) || []
+  const navigate = useNavigate();
+
+  // let cartNumbers = carts.reduce((acc, item) => acc + item.quantity, 0);
+
+  useEffect(() => {
+    const total = carts.reduce((acc, item) => {
+      return acc + (item.price * item.quantity)
+    }, 0)
+    setTotal(total)
+
+  }, [carts])
 
 
-  let cartNumbers = carts.reduce((acc, item) => acc + item.quantity, 0);
+
+  // const cartsa = JSON.parse(localStorage.getItem('cart')) || []
+
+
+
+
 
   const handleDecre = (id) => {
     const updatedCart = carts.map(item => {
@@ -29,7 +82,7 @@ function Cart() {
       return item
     })
     localStorage.setItem('cart', JSON.stringify(updatedCart))
-    navigate('/cart')
+    navigate('/checkout')
   }
 
   const handleIncre = (id) => {
@@ -43,41 +96,34 @@ function Cart() {
       return item
     })
     localStorage.setItem('cart', JSON.stringify(updatedCart))
-    navigate('/cart')
+    navigate('/checkout')
   }
 
   const handleRemove = (id) => {
     const updatedCart = carts.filter(item => item.id !== id)
     localStorage.setItem('cart', JSON.stringify(updatedCart))
-    navigate('/cart')
+    navigate('/checkout')
   }
 
-  const [totals, setTotals] = useState(0)
-
-  useEffect(() => {
-    const total = carts.reduce((acc, item) => {
-      return acc + (item.price * item.quantity)
-    }, 0)
-    setTotals(total)
-
-  }, [carts])
+  let cartNumbers = carts.reduce((acc, item) => acc + item.quantity, 0);
 
   const [inputOpen, setInputOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
-
 
   return (
     <>
-    <div className="inpt__box text-black">
+
+<div className="inpt__box text-black">
         <input type='text' placeholder='Search' className={`inpt-dropdown ${inputOpen ? 'active' : 'inactive'}`}/>
         <i className="fa-solid w-0 fa-magnifying-glass search-icon text-lg cursor-pointer" onClick={() => setInputOpen(!inputOpen)}></i>
 
-        <Link to={'/cart'}><i class="fa-solid fa-cart-shopping text-black text-xl cursor-pointer cart__icon" onClick={() => setCartOpen(!cartOpen)}><sup className='cart-sup'>{cartNumbers}</sup></i></Link>
+        <Link to={'/cart'}><i class="fa-solid fa-cart-shopping text-black text-xl cursor-pointer cart__icon"><sup className='cart-sup'>{cartNumbers}</sup></i></Link>
       </div>
 
-      
 
-      <div className='cart__containers' style={{width: "50%", marginRight: "auto",marginLeft: "auto",marginTop: "6rem"}}>
+
+
+    
+    <div className='cart__containers' style={{width: "50%", marginRight: "auto",marginLeft: "auto",marginTop: "6rem"}}>
   
 
   {/* <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div> */}
@@ -173,12 +219,6 @@ function Cart() {
                 </Link>
               </p>
             </div>
-
-            <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                <Link to={'/checkout'} className="font-medium checkout__btn">
-                  Checkout
-                </Link>
-            </div>
           </div>
 
         </div>
@@ -190,8 +230,122 @@ function Cart() {
 
   </div>
 
+
+
+
+
+<div className="min-h-screen flex justify-center items-center p-4">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 className="text-2xl font-semibold mb-6">Checkout</h2>
+        <form className="space-y-4">
+          <div>
+            <label className="block mb-1">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Address</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1">City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-1">State</label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1">ZIP Code</label>
+              <input
+                type="text"
+                name="zip"
+                value={formData.zip}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-1">Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleOrder}
+            disabled={!isFormComplete}
+            className={`w-full p-2 mt-4 ${isFormComplete ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} text-white rounded-lg`}
+          >
+            Place Order
+          </button>
+        </form>
+      </div>
+
+      {isPopupVisible && (
+        <div
+          className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center"
+          onClick={closePopup}
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-semibold">Your order has been placed!</h3>
+            <button
+              onClick={closePopup}
+              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+     
     </>
   );
-}
+};
 
-export default Cart;
+export default CheckoutPage;

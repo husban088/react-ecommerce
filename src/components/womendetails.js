@@ -93,6 +93,11 @@ function Womendetails() {
               <div className='wear__button'>
                 <button className='wear__btn' onClick={() => handleCart(product)}>Add to cart</button>
               </div>
+              <div className="wear__button wear__buttons">
+                <Link to={'/checkout'} className="font-medium checkout__btns">
+                  Checkout
+                </Link>
+              </div>
             </div>
           </div>
         </div>

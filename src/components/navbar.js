@@ -175,18 +175,30 @@ function Navbarx(props) {
     setShows(true);
   };
 
-  const handleOutsideClick = () => {
-    setShows(false);
-  };
+
 
 
   const [navShow, setnavShow] = useState(false);
-  const navRef = useRef(null);
+  const navRef = useRef();
+
+  const handleOutsideClick = (e) => {
+    if (navRef.current && !navRef.current.contains(e.target)) {
+      setnavShow(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
 
 
   return (
     <>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-white sticky-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-white sticky-top shadow-sm">
         <div class="container-fluid">
         <i class="fa-solid fa-bars menu__icon" onClick={() => setnavShow(!navShow)}></i>
          <Link to={'/'} class="navbar-brand"><img src={logo} alt="IRONGEAR" /></Link>
@@ -342,7 +354,6 @@ function Navbarx(props) {
     <li><Link to={'/women'} className='navside__link'>Women</Link></li>
   </ul>
 </div>
-
 
 
     </>
